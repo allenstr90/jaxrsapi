@@ -1,6 +1,8 @@
 package aem.example.jee.jaxrsapi.repository;
 
+import aem.example.jee.jaxrsapi.model.Role;
 import aem.example.jee.jaxrsapi.model.User;
+import aem.example.jee.jaxrsapi.model.User_;
 import aem.example.jee.jaxrsapi.type.Pageable;
 import aem.example.jee.jaxrsapi.type.UserSearchForm;
 
@@ -53,10 +55,18 @@ public class UserRepositoryImpl implements UserRepository {
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<User> root = criteriaQuery.from(User.class);
+
         if (searchForm.getUsername() != null && !searchForm.getUsername().isEmpty()) {
             Predicate predicate = criteriaBuilder.like(root.get("username"), "%" + searchForm.getUsername() + "%");
             predicates.add(predicate);
         }
+
+        if (searchForm.getInRole() != null && !searchForm.getInRole().isEmpty()) {
+            Join<User, Role> userRoleJoin = root.join(User_.roles);
+            Predicate predicate = criteriaBuilder.like(userRoleJoin.get("name"), "%" + searchForm.getInRole() + "%");
+            predicates.add(predicate);
+        }
+
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
         List<Order> orders = new ArrayList<>();
         List<Pageable.Order> sort = pageable.getOrder();
