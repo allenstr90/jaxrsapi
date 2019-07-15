@@ -1,5 +1,6 @@
 package aem.example.jee.jaxrsapi.controller;
 
+import aem.example.jee.jaxrsapi.dto.UserSearchForm;
 import aem.example.jee.jaxrsapi.model.User;
 import aem.example.jee.jaxrsapi.repository.UserRepository;
 import aem.example.jee.jaxrsapi.util.PasswordEncoder;
@@ -25,9 +26,13 @@ public class UserApi {
     @Inject
     UserRepository userRepository;
 
+    @Context
+    SecurityContext securityContext;
+
     @GET
-    public Response getAllUsers(@Context SecurityContext securityContext) {
-        List<User> users = userRepository.findAll();
+    public Response getAllUsers(@QueryParam("username") String username, @QueryParam("inRole") String inRole) {
+        List<User> users = userRepository
+                .findByUserSearchForm(UserSearchForm.builder().username(username).inRole(inRole).build());
         return Response.ok(users).build();
     }
 
@@ -37,4 +42,6 @@ public class UserApi {
         userRepository.saveUser(user);
         return Response.status(Response.Status.CREATED).entity(user).build();
     }
+
+
 }
