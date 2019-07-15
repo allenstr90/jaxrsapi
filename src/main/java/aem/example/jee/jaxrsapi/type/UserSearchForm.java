@@ -1,4 +1,4 @@
-package aem.example.jee.jaxrsapi.dto;
+package aem.example.jee.jaxrsapi.type;
 
 import lombok.Builder;
 import lombok.Data;

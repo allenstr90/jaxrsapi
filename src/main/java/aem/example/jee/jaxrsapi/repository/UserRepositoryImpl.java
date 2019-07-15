@@ -1,16 +1,14 @@
 package aem.example.jee.jaxrsapi.repository;
 
-import aem.example.jee.jaxrsapi.dto.UserSearchForm;
 import aem.example.jee.jaxrsapi.model.User;
+import aem.example.jee.jaxrsapi.type.Pageable;
+import aem.example.jee.jaxrsapi.type.UserSearchForm;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findByUserSearchForm(UserSearchForm searchForm) {
+    public List<User> findByUserSearchForm(UserSearchForm searchForm, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         List<Predicate> predicates = new ArrayList<>();
@@ -59,8 +57,20 @@ public class UserRepositoryImpl implements UserRepository {
             Predicate predicate = criteriaBuilder.like(root.get("username"), "%" + searchForm.getUsername() + "%");
             predicates.add(predicate);
         }
-        criteriaQuery.where(predicates.toArray(new Predicate[predicates.size()]));
+        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+        List<Order> orders = new ArrayList<>();
+        List<Pageable.Order> sort = pageable.getOrder();
+        sort.forEach(sort1 -> {
+            if (sort1.isAscending()) {
+                orders.add(criteriaBuilder.asc(root.get(sort1.getProperty())));
+            } else {
+                orders.add(criteriaBuilder.desc(root.get(sort1.getProperty())));
+            }
+        });
+        criteriaQuery.orderBy(orders);
         TypedQuery<User> query = em.createQuery(criteriaQuery);
+        query.setFirstResult(pageable.getPage());
+        query.setMaxResults(pageable.getSize());
 
         return query.getResultList();
     }
