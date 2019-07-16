@@ -1,5 +1,6 @@
 package aem.example.jee.jaxrsapi.controller;
 
+import aem.example.jee.jaxrsapi.dto.UserDTO;
 import aem.example.jee.jaxrsapi.model.User;
 import aem.example.jee.jaxrsapi.repository.UserRepository;
 import aem.example.jee.jaxrsapi.type.Pageable;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Path("user")
 @Produces(MediaType.APPLICATION_JSON)
@@ -40,8 +42,11 @@ public class UserApi {
             @QueryParam("order") List<String> order) {
 
         Pageable pageable = PaginatorUtil.build(page, size, order, User.class);
-        List<User> users = userRepository
-                .findByUserSearchForm(UserSearchForm.builder().username(username).inRole(inRole).build(), pageable);
+        List<UserDTO> users = userRepository
+                .findByUserSearchForm(UserSearchForm.builder().username(username).inRole(inRole).build(), pageable)
+                .stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
         return Response.ok(users).build();
     }
 
