@@ -50,7 +50,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
                         requestContext.setSecurityContext(new SecurityContext() {
                             @Override
                             public Principal getUserPrincipal() {
-                                return () -> userJWT.getUsername();
+                                return userJWT::getUsername;
                             }
 
                             @Override

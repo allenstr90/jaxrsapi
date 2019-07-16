@@ -10,6 +10,6 @@ import java.io.Serializable;
 @Builder
 @JsonbNillable
 public class TokenDTO implements Serializable {
-    private final String version = "v1";
+    private static final String VERSION = "v1";
     private String token;
 }

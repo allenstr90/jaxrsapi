@@ -28,7 +28,7 @@ public class AuthApi {
     @POST
     @PermitAll
     public Response login(LoginDTO ldto) {
-        Optional<User> userOptional = authService.authenticateUser(ldto.getJ_username(), ldto.getJ_password());
+        Optional<User> userOptional = authService.authenticateUser(ldto.getUsername(), ldto.getPassword());
         return userOptional
                 .map(user -> Response
                         .ok(TokenDTO

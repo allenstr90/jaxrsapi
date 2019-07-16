@@ -92,7 +92,7 @@ public class AuthorizationFilter implements ContainerRequestFilter {
 
 
     private void refuseRequest(String cause) {
-        LOGGER.log(Level.SEVERE, "Refuse resources consummation :=> " + cause);
+        LOGGER.log(Level.SEVERE, "Refuse resources consummation :=> {0}" , cause);
         throw new NotAuthorizedException("You don't have permissions to perform this action.", Response.status(Response.Status.UNAUTHORIZED)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .entity("{\"error\":\"You don't have permissions to perform this action.\"}")

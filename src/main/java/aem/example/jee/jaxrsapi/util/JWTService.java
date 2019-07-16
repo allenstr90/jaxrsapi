@@ -17,6 +17,9 @@ public class JWTService {
     private static final String SECRET = "secret";
     private static final Algorithm ALGORITHM = Algorithm.HMAC512(SECRET);
 
+    private JWTService() {
+    }
+
     public static String generateToken(String username, String[] roles) {
 
         Date issuedAt = new Date(System.currentTimeMillis());
