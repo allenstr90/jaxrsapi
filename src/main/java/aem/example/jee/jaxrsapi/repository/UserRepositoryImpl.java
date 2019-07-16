@@ -73,7 +73,7 @@ public class UserRepositoryImpl implements UserRepository {
         sort.forEach(sort1 -> {
             if (sort1.isAscending()) {
                 orders.add(criteriaBuilder.asc(root.get(sort1.getProperty())));
-            } else {
+            } else if (sort1.isDescending()) {
                 orders.add(criteriaBuilder.desc(root.get(sort1.getProperty())));
             }
         });

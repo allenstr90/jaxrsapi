@@ -30,5 +30,9 @@ public class Pageable {
         public boolean isAscending() {
             return direction == Sort.ASC;
         }
+
+        public boolean isDescending() {
+            return direction == Sort.DESC;
+        }
     }
 }
