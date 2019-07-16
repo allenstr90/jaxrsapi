@@ -12,7 +12,15 @@ import java.util.Collection;
 @Entity
 @Table(name = "book_store_role")
 @Data
+@NamedQuery(
+        name = Role.FIND_BY_NAME,
+        query = "select r from Role r where r.name= :" + Role.FIND_BY_NAME_PARAM_NAME
+)
 public class Role implements Serializable {
+
+    public static final String FIND_BY_NAME = "Role.findByName";
+    public static final String FIND_BY_NAME_PARAM_NAME = "name";
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,26 +14,21 @@ import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequestScoped
 public class UserRepositoryImpl implements UserRepository {
 
     @PersistenceContext(unitName = "bookStorePU")
-    EntityManager em;
+    private EntityManager em;
 
     @Override
-    public User findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return em
                 .createNamedQuery(User.FIND_BY_USERNAME, User.class)
                 .setParameter(User.FIND_BY_USERNAME_PARAM_USERNAME, username)
-                .getResultList().stream().findFirst().orElse(null);
+                .getResultList().stream().findFirst();
     }
-
-    @Override
-    public List<User> findAll() {
-        return em.createNamedQuery(User.FIND_ALL, User.class).getResultList();
-    }
-
 
     @Override
     @Transactional(Transactional.TxType.REQUIRED)

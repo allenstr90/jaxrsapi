@@ -15,7 +15,7 @@ public class AuthService {
     private UserRepository userRepository;
 
     public Optional<User> authenticateUser(String username, String password) {
-        Optional<User> optional = Optional.ofNullable(userRepository.findByUsername(username));
+        Optional<User> optional = userRepository.findByUsername(username);
         return optional.filter(user -> PasswordEncoder.encodeSha256(password).equals(user.getPassword()));
     }
 }

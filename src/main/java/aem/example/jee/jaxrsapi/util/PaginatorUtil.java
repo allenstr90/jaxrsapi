@@ -15,8 +15,7 @@ public class PaginatorUtil {
     public static Pageable build(int page, int size, List<String> order, Class aClass) {
         List<Pageable.Order> orders = order
                 .stream()
-                .filter(o -> !o.isEmpty())
-                .filter(o -> o.split(",").length <= 2)
+                .filter(o -> !o.isEmpty() && o.split(",").length <= 2)
                 .filter(o -> {
                     try {
                         return aClass.getDeclaredField(o.split(",")[0]) != null

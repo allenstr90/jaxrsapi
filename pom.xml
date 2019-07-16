@@ -80,6 +80,7 @@
                             <processors>
                                 <processor>org.eclipse.persistence.internal.jpa.modelgen.CanonicalModelProcessor</processor>
                             </processors>
+                            <compilerArguments>-Aeclipselink.persistencexml=${project.basedir}/src/main/resources/META-INF/persistence.xml</compilerArguments>
                         </configuration>
                     </execution>
                 </executions>

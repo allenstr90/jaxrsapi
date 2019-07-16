@@ -9,7 +9,6 @@ import aem.example.jee.jaxrsapi.util.JWTService;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
-import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -32,19 +31,17 @@ public class AuthApi {
         Optional<User> userOptional = authService.authenticateUser(ldto.getJ_username(), ldto.getJ_password());
         return userOptional
                 .map(user -> Response
-                        .ok(JsonbBuilder.create()
-                                .toJson(TokenDTO
-                                        .builder()
-                                        .token(
-                                                JWTService
-                                                        .generateToken(
-                                                                user.getUsername(),
-                                                                user.getRoles()
-                                                                        .stream()
-                                                                        .map(Role::getName)
-                                                                        .collect(Collectors.toList())
-                                                                        .toArray(new String[user.getRoles().size()])))
-                                        .build()))
+                        .ok(TokenDTO
+                                .builder()
+                                .token(JWTService
+                                        .generateToken(
+                                                user.getUsername(),
+                                                user.getRoles()
+                                                        .stream()
+                                                        .map(Role::getName)
+                                                        .collect(Collectors.toList())
+                                                        .toArray(new String[user.getRoles().size()])))
+                                .build())
                         .build()
                 ).orElse(Response.status(Response.Status.FORBIDDEN).build());
 
