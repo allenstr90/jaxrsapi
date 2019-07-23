@@ -12,4 +12,5 @@ import java.io.Serializable;
 public class TokenDTO implements Serializable {
     private static final String VERSION = "v1";
     private String token;
+    private String refeshToken;
 }

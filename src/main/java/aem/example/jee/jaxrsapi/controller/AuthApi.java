@@ -4,7 +4,7 @@ import aem.example.jee.jaxrsapi.dto.LoginDTO;
 import aem.example.jee.jaxrsapi.dto.TokenDTO;
 import aem.example.jee.jaxrsapi.dto.UserDTO;
 import aem.example.jee.jaxrsapi.service.AuthService;
-import aem.example.jee.jaxrsapi.util.JWTService;
+import aem.example.jee.jaxrsapi.service.TokenService;
 
 import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
@@ -23,22 +23,23 @@ public class AuthApi {
     @Inject
     private AuthService authService;
 
+    @Inject
+    private TokenService tokenService;
+
     @POST
     @PermitAll
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response login(LoginDTO ldto) {
         Optional<UserDTO> userOptional = authService.authenticateUser(ldto.getUsername(), ldto.getPassword());
-        return userOptional
-                .map(user -> Response
-                        .ok(TokenDTO
-                                .builder()
-                                .token(JWTService.generateToken(user.getUsername(), user.getRoles().toArray(new String[0])))
-                                .build())
-                        .build())
-                .orElse(Response.status(Response.Status.UNAUTHORIZED)
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                        .entity("{\"error\":\"Invalid credentials. Login failed.\"}")
-                        .build());
+        if (userOptional.isPresent()) {
+            UserDTO userDTO = userOptional.get();
+            TokenDTO tokenDTO = tokenService.generateCredentials(userDTO.getUsername(), userDTO.getRoles());
+            return Response.ok(tokenDTO).build();
+        }
+        return Response.status(Response.Status.UNAUTHORIZED)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .entity("{\"error\":\"Invalid credentials. Login failed.\"}")
+                .build();
 
     }
 
