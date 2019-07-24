@@ -5,10 +5,10 @@
     <persistence-unit name="bookStorePU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>jdbc/bookStoreDerby</jta-data-source>
-        <class>aem.example.jee.jaxrsapi.model.Role</class>
-        <class>aem.example.jee.jaxrsapi.model.User</class>
-        <class>aem.example.jee.jaxrsapi.model.Book</class>
-        <class>aem.example.jee.jaxrsapi.model.Author</class>
+        <class>aem.example.jee.jaxrsapi.core.model.Role</class>
+        <class>aem.example.jee.jaxrsapi.core.model.User</class>
+        <class>aem.example.jee.jaxrsapi.bussines.model.Book</class>
+        <class>aem.example.jee.jaxrsapi.bussines.model.Author</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="create"/>
@@ -19,7 +19,8 @@
     <persistence-unit name="tokenStorePU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <jta-data-source>java:app/JaxRsApi/MyDataSource</jta-data-source>
-        <class>aem.example.jee.jaxrsapi.model.TokenRefresh</class>
+        <class>aem.example.jee.jaxrsapi.core.model.TokenRefresh</class>
+        <class>aem.example.jee.jaxrsapi.core.converter.LocalDateToDatetimeConverter</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create" />
