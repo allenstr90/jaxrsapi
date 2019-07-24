@@ -50,10 +50,22 @@ public class JWTService {
                 .sign(ALGORITHM);
     }
 
-    public static boolean validateToken(String token) {
+    public static boolean validateAccessToken(String token) {
+        LOGGER.info("Validating jwt access token");
+        return validateToken(token, "accessToken");
+    }
+
+    public static boolean validateRefreshToken(String token) {
+        LOGGER.info("Validating jwt refresh token");
+        return validateToken(token, "refreshToken");
+    }
+
+    private static boolean validateToken(String token, String claimType) {
         LOGGER.info("Validating jwt token");
         try {
-            JWTVerifier verifier = JWT.require(ALGORITHM).withIssuer(ISSUER).withClaim("type", "accessToken").build();
+            JWTVerifier verifier = JWT.require(ALGORITHM).withIssuer(ISSUER)
+                    .withClaim("type", claimType)
+                    .build();
             verifier.verify(token);
             return true;
         } catch (JWTVerificationException e) {
