@@ -22,6 +22,10 @@ import java.time.LocalDateTime;
         name = "TokenRefresh.findAllByDateValid",
         query = "select t from TokenRefresh t where t.createDate =:username"
 )
+@NamedQuery(
+        name = "TokenRefresh.deleteDefeatedTokens",
+        query = "delete from TokenRefresh where createDate <:defeatedDate"
+)
 public class TokenRefresh implements Serializable {
 
     @Id
@@ -34,7 +38,7 @@ public class TokenRefresh implements Serializable {
     @Column(length = 1000, nullable = false)
     private String refreshToken;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    //@Temporal(TemporalType.TIMESTAMP)
     @Convert(converter = LocalDateToDatetimeConverter.class)
     private LocalDateTime createDate = LocalDateTime.now();
 }

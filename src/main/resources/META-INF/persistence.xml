@@ -18,7 +18,7 @@
     </persistence-unit>
     <persistence-unit name="tokenStorePU" transaction-type="JTA">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-        <jta-data-source>java:app/JaxRsApi/MyDataSource</jta-data-source>
+        <jta-data-source>java:app/JaxRsApi/H2TokenStore</jta-data-source>
         <class>aem.example.jee.jaxrsapi.core.model.TokenRefresh</class>
         <class>aem.example.jee.jaxrsapi.core.converter.LocalDateToDatetimeConverter</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>

@@ -22,6 +22,9 @@ public class AuthService {
     @Inject
     private TokenService tokenService;
 
+    @Inject
+    private JWTService jwtService;
+
     public Optional<UserDTO> authenticateUser(String username, String password) {
         Optional<User> optional = userRepository.findByUsername(username);
         return optional
@@ -34,8 +37,8 @@ public class AuthService {
     }
 
     public Optional<TokenDTO> refreshToken(String refreshToken) {
-        if (JWTService.validateRefreshToken(refreshToken)) {
-            UserJWT userJwt = JWTService.getUserJwt(refreshToken);
+        if (jwtService.validateRefreshToken(refreshToken)) {
+            UserJWT userJwt = jwtService.getUserJwt(refreshToken);
             if (tokenService.canRefreshToken(userJwt.getUsername(), refreshToken)) {
                 return generateUserDto(userJwt.getUsername())
                         .map(userDTO -> tokenService.generateCredentials(userDTO.getUsername(), userDTO.getRoles()));

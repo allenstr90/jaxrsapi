@@ -5,6 +5,9 @@ import aem.example.jee.jaxrsapi.core.model.TokenRefresh;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 public interface TokenRefreshRepository {
@@ -15,7 +18,10 @@ public interface TokenRefreshRepository {
 
     void delete(String username);
 
+    void deleteDefeatedTokens();
+
     class TokenRefreshRepositoryImpl implements TokenRefreshRepository {
+        private static Logger logger = Logger.getLogger(TokenRefreshRepository.class.getName());
 
         @PersistenceContext(unitName = "tokenStorePU")
         private EntityManager em;
@@ -38,9 +44,18 @@ public interface TokenRefreshRepository {
         @Override
         @Transactional(Transactional.TxType.REQUIRED)
         public void delete(String username) {
+            logger.log(Level.FINE, "Cleaning tokens for user {0}", username);
             em.createNamedQuery("TokenRefresh.deleteByUsername", TokenRefresh.class)
                     .setParameter("username", username).executeUpdate();
 
+        }
+
+        @Override
+        @Transactional(Transactional.TxType.REQUIRED)
+        public void deleteDefeatedTokens() {
+            em.createNamedQuery("TokenRefresh.deleteDefeatedTokens", TokenRefresh.class)
+                    .setParameter("defeatedDate", LocalDateTime.now().minusDays(1))
+                    .executeUpdate();
         }
     }
 }

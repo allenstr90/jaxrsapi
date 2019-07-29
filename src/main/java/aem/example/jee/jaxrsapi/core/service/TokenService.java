@@ -18,10 +18,13 @@ public interface TokenService {
         @Inject
         private TokenRefreshRepository tokenRefreshRepository;
 
+        @Inject
+        private JWTService jwtService;
+
         @Override
         public TokenDTO generateCredentials(String username, Set<String> roles) {
-            String token = JWTService.generateToken(username, roles.toArray(new String[0]));
-            String refreshToken = JWTService.generateRefreshToken(username);
+            String token = jwtService.generateToken(username, roles.toArray(new String[0]));
+            String refreshToken = jwtService.generateRefreshToken(username);
             TokenRefresh tokenRefresh = new TokenRefresh();
             tokenRefresh.setUsername(username);
             tokenRefresh.setRefreshToken(refreshToken);

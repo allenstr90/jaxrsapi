@@ -4,6 +4,7 @@ import aem.example.jee.jaxrsapi.core.model.UserJWT;
 import aem.example.jee.jaxrsapi.core.util.JWTService;
 
 import javax.annotation.Priority;
+import javax.inject.Inject;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
@@ -22,6 +23,9 @@ import java.util.logging.Logger;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
 
+    @Inject
+    private JWTService jwtService;
+
     private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
     private static final List<String> WHITE_LIST = Arrays.asList("auth/token", "auth/refresh");
     private static final String BEARER = "Bearer";
@@ -38,12 +42,12 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             }
 
             String token = authorizationHeader.substring(BEARER.length()).trim();
-            if (!JWTService.validateAccessToken(token)) {
+            if (!jwtService.validateAccessToken(token)) {
                 LOGGER.info("No valid token provided");
                 refuseWithUnauthorized(requestContext, "No valid token provided");
             } else {
                 final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
-                UserJWT userJWT = JWTService.getUserJwt(token);
+                UserJWT userJWT = jwtService.getUserJwt(token);
                 requestContext.setSecurityContext(new SecurityContext() {
                     @Override
                     public Principal getUserPrincipal() {

@@ -1,13 +1,13 @@
 package aem.example.jee.jaxrsapi.core.config;
 
 import javax.annotation.sql.DataSourceDefinition;
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 
 @DataSourceDefinition(
-        name = "java:app/JaxRsApi/MyDataSource",
+        name = "java:app/JaxRsApi/H2TokenStore",
         className = "org.h2.jdbcx.JdbcDataSource",
         url = "jdbc:h2:mem:tokenStore"
 )
-@Stateless
+@ApplicationScoped
 public class TokenStore {
 }
