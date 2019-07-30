@@ -5,7 +5,6 @@ import aem.example.jee.jaxrsapi.core.model.User;
 import aem.example.jee.jaxrsapi.core.service.UserService;
 import aem.example.jee.jaxrsapi.core.type.Pageable;
 import aem.example.jee.jaxrsapi.core.type.UserSearchForm;
-import aem.example.jee.jaxrsapi.core.util.PaginatorUtil;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -24,16 +23,9 @@ public class UserApi {
     private UserService userService;
 
     @GET
-    public Response getAllUsers(
-            @QueryParam("username") String username,
-            @QueryParam("inRole") String inRole,
-            @QueryParam("page") int page,
-            @DefaultValue("5") @QueryParam("size") int size,
-            @QueryParam("order") List<String> order) {
-
-        Pageable pageable = PaginatorUtil.build(page, size, order, User.class);
-        List<UserDTO> users = userService
-                .findByUserSearchForm(UserSearchForm.builder().username(username).inRole(inRole).build(), pageable);
+    public Response getAllUsers(@QueryParam("username") String username, @QueryParam("inRole") String inRole, Pageable<User> pageable) {
+        List<UserDTO> users = userService.findByUserSearchForm(UserSearchForm
+                .builder().username(username).inRole(inRole).build(), pageable);
         return Response.ok(users).build();
     }
 
