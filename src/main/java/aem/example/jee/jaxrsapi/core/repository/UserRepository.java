@@ -1,6 +1,7 @@
 package aem.example.jee.jaxrsapi.core.repository;
 
 import aem.example.jee.jaxrsapi.core.model.User;
+import aem.example.jee.jaxrsapi.core.type.Page;
 import aem.example.jee.jaxrsapi.core.type.Pageable;
 import aem.example.jee.jaxrsapi.core.type.UserSearchForm;
 
@@ -15,5 +16,5 @@ public interface UserRepository {
 
     List<String> getUserRoles(String username);
 
-    List<User> findByUserSearchForm(UserSearchForm searchForm, Pageable pageable);
+    Page<User> findPageByUserSearchForm(UserSearchForm searchForm, Pageable pageable);
 }

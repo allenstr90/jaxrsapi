@@ -3,12 +3,15 @@ package aem.example.jee.jaxrsapi.core.repository;
 import aem.example.jee.jaxrsapi.core.model.Role;
 import aem.example.jee.jaxrsapi.core.model.User;
 import aem.example.jee.jaxrsapi.core.model.User_;
+import aem.example.jee.jaxrsapi.core.type.Page;
 import aem.example.jee.jaxrsapi.core.type.Pageable;
 import aem.example.jee.jaxrsapi.core.type.UserSearchForm;
+import aem.example.jee.jaxrsapi.core.util.PageUtil;
 
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
@@ -46,11 +49,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<User> findByUserSearchForm(UserSearchForm searchForm, Pageable pageable) {
+    public Page<User> findPageByUserSearchForm(UserSearchForm searchForm, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+
+
         List<Predicate> predicates = new ArrayList<>();
         Root<User> root = criteriaQuery.from(User.class);
+
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(root));
 
         if (searchForm.getUsername() != null && !searchForm.getUsername().isEmpty()) {
             Predicate predicate = criteriaBuilder.like(root.get("username"), "%" + searchForm.getUsername() + "%");
@@ -64,6 +72,8 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
+        countQuery.where(predicates.toArray(new Predicate[0]));
+
         List<Order> orders = new ArrayList<>();
         List<Pageable.Sort> sort = pageable.getSorts();
         sort.forEach(sort1 -> {
@@ -74,10 +84,16 @@ public class UserRepositoryImpl implements UserRepository {
             }
         });
         criteriaQuery.orderBy(orders);
-        TypedQuery<User> query = em.createQuery(criteriaQuery);
-        query.setFirstResult(pageable.getPage());
-        query.setMaxResults(pageable.getSize());
 
-        return query.getResultList();
+
+        TypedQuery<User> query = em.createQuery(criteriaQuery);
+
+        Query count = em.createQuery(countQuery);
+        long total = (long) count.getSingleResult();
+
+        query.setMaxResults(pageable.getSize());
+        query.setFirstResult(pageable.getSize() * pageable.getPage());
+
+        return PageUtil.from(total, pageable.getPage(), pageable.getSize(), query.getResultList());
     }
 }
