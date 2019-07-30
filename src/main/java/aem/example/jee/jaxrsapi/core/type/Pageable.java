@@ -5,34 +5,39 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.json.bind.annotation.JsonbProperty;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Builder
-public class Pageable {
-    @JsonbProperty(nillable = true)
-    private List<Order> order;
-    @JsonbProperty(nillable = true)
-    private int page;
-    @JsonbProperty(nillable = true)
-    private int size;
+public class Pageable<T> {
 
-    public enum Sort {
+    @Builder.Default
+    @JsonbProperty(nillable = true)
+    private List<Sort> sorts = new ArrayList<>();
+    @Builder.Default
+    @JsonbProperty(nillable = true)
+    private int page = 0;
+    @Builder.Default
+    @JsonbProperty(nillable = true)
+    private int size = 10;
+
+    public enum Direction {
         ASC, DESC
     }
 
     @Data
     @AllArgsConstructor
-    public static class Order {
+    public static class Sort {
         private String property;
-        private Sort direction;
+        private Direction direction;
 
         public boolean isAscending() {
-            return direction == Sort.ASC;
+            return direction == Direction.ASC;
         }
 
         public boolean isDescending() {
-            return direction == Sort.DESC;
+            return direction == Direction.DESC;
         }
     }
 }

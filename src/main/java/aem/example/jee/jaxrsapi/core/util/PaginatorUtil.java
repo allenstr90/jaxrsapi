@@ -2,6 +2,8 @@ package aem.example.jee.jaxrsapi.core.util;
 
 import aem.example.jee.jaxrsapi.core.type.Pageable;
 
+import javax.ws.rs.core.MultivaluedMap;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -12,8 +14,8 @@ public class PaginatorUtil {
     private PaginatorUtil() {
     }
 
-    public static Pageable build(int page, int size, List<String> order, Class aClass) {
-        List<Pageable.Order> orders = order
+    public static Pageable build(int page, int size, List<String> sort, Class aClass) {
+        List<Pageable.Sort> sorts = sort
                 .stream()
                 .filter(o -> !o.isEmpty() && o.split(",").length <= 2)
                 .filter(o -> {
@@ -27,18 +29,25 @@ public class PaginatorUtil {
                 .map(o -> o.split(","))
                 .map(strings -> {
                     String property = strings[0];
-                    Pageable.Sort sort = Pageable.Sort.ASC;
+                    Pageable.Direction direction = Pageable.Direction.ASC;
                     if (strings[1] != null) {
-                        sort = Arrays.stream(Pageable.Sort.values())
+                        direction = Arrays.stream(Pageable.Direction.values())
                                 .parallel()
-                                .filter(sort1 -> sort1.name().equalsIgnoreCase(strings[1]))
+                                .filter(direction1 -> direction1.name().equalsIgnoreCase(strings[1]))
                                 .findAny()
-                                .orElse(Pageable.Sort.ASC);
+                                .orElse(Pageable.Direction.ASC);
                     }
-                    return new Pageable.Order(property, sort);
+                    return new Pageable.Sort(property, direction);
                 })
                 .collect(Collectors.toList());
 
-        return Pageable.builder().page(page).size(size).order(orders).build();
+        return Pageable.builder().page(page).size(size).sorts(sorts).build();
+    }
+
+    public static Pageable from(MultivaluedMap<String, String> map, Class aClass) {
+        int page = map.containsKey("page") ? Integer.valueOf(map.getFirst("page")) : 0;
+        int size = map.containsKey("size") ? Integer.valueOf(map.getFirst("size")) : 10;
+        List<String> order = map.containsKey("sort") ? map.get("sort") : new ArrayList<>();
+        return build(page, size, order, aClass);
     }
 }

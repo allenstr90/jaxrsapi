@@ -44,6 +44,7 @@ public class UserRepositoryImpl implements UserRepository {
                 .getResultList();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<User> findByUserSearchForm(UserSearchForm searchForm, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -64,7 +65,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         criteriaQuery.where(predicates.toArray(new Predicate[0]));
         List<Order> orders = new ArrayList<>();
-        List<Pageable.Order> sort = pageable.getOrder();
+        List<Pageable.Sort> sort = pageable.getSorts();
         sort.forEach(sort1 -> {
             if (sort1.isAscending()) {
                 orders.add(criteriaBuilder.asc(root.get(sort1.getProperty())));
