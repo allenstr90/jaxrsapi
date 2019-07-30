@@ -1,9 +1,11 @@
 package aem.example.jee.jaxrsapi.core.service;
 
 import aem.example.jee.jaxrsapi.core.dto.UserDTO;
+import aem.example.jee.jaxrsapi.core.factory.UserFactory;
 import aem.example.jee.jaxrsapi.core.model.User;
 import aem.example.jee.jaxrsapi.core.repository.RoleRepository;
 import aem.example.jee.jaxrsapi.core.repository.UserRepository;
+import aem.example.jee.jaxrsapi.core.type.Page;
 import aem.example.jee.jaxrsapi.core.type.Pageable;
 import aem.example.jee.jaxrsapi.core.type.UserSearchForm;
 import aem.example.jee.jaxrsapi.core.util.PasswordEncoder;
@@ -20,7 +22,7 @@ public interface UserService {
 
     List<String> getUserRoles(String username);
 
-    List<UserDTO> findByUserSearchForm(UserSearchForm searchForm, Pageable pageable);
+    Page<UserDTO> findPageByUserSearchForm(UserSearchForm searchForm, Pageable pageable);
 
 
     class UserServiceImpl implements UserService {
@@ -30,6 +32,9 @@ public interface UserService {
 
         @Inject
         private RoleRepository roleRepository;
+
+        @Inject
+        private UserFactory userFactory;
 
         @Override
         public Optional<UserDTO> findByUsername(String username) {
@@ -58,9 +63,9 @@ public interface UserService {
         }
 
         @Override
-        public List<UserDTO> findByUserSearchForm(UserSearchForm searchForm, Pageable pageable) {
-            return userRepository.findByUserSearchForm(searchForm, pageable)
-                    .stream().map(UserDTO::new).collect(Collectors.toList());
+        public Page<UserDTO> findPageByUserSearchForm(UserSearchForm searchForm, Pageable pageable) {
+            Page<User> pageByUserSearchForm = userRepository.findPageByUserSearchForm(searchForm, pageable);
+            return userFactory.from(pageByUserSearchForm);
         }
     }
 }
