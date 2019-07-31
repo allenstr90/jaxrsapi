@@ -6,6 +6,8 @@ import java.util.List;
 
 public class PageUtil {
 
+    private PageUtil(){}
+
     public static Page from(long total, int page, int size, List data) {
         return new Page() {
             @Override

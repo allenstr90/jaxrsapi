@@ -3,7 +3,6 @@ package aem.example.jee.jaxrsapi.core.reader;
 import aem.example.jee.jaxrsapi.core.dto.LoginDTO;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -30,7 +29,7 @@ public class LoginMessageBodyReader implements MessageBodyReader<LoginDTO> {
     }
 
     @Override
-    public LoginDTO readFrom(Class<LoginDTO> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> multivaluedMap, InputStream inputStream) throws IOException, WebApplicationException {
+    public LoginDTO readFrom(Class<LoginDTO> aClass, Type type, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> multivaluedMap, InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String collect = reader.lines().collect(Collectors.joining());
         String decode = URLDecoder.decode(collect, "UTF-8");

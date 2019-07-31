@@ -4,7 +4,6 @@ import aem.example.jee.jaxrsapi.core.type.Pageable;
 import aem.example.jee.jaxrsapi.core.util.PaginatorUtil;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -16,10 +15,15 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Provider
 @Consumes(MediaType.APPLICATION_JSON)
 public class PaginationReader implements MessageBodyReader<Pageable> {
+
+    private final Logger logger = Logger.getLogger(PaginationReader.class.getName());
+
     @Context
     private UriInfo uriInfo;
 
@@ -29,12 +33,13 @@ public class PaginationReader implements MessageBodyReader<Pageable> {
     }
 
     @Override
-    public Pageable readFrom(Class<Pageable> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException, WebApplicationException {
+    public Pageable readFrom(Class<Pageable> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException {
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
         Pageable pageable = Pageable.builder().build();
         try {
             pageable = PaginatorUtil.from(queryParams, Class.forName(((ParameterizedType) genericType).getActualTypeArguments()[0].getTypeName()));
-        } catch (ClassNotFoundException ignored) {
+        } catch (ClassNotFoundException ex) {
+            logger.log(Level.SEVERE, ex.getMessage());
         }
         return pageable;
     }
