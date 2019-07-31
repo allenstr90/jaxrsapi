@@ -17,7 +17,7 @@ public class CleanDefeatedToken {
     @Inject
     private TokenRefreshRepository tokenRefreshRepository;
 
-    @Schedule(hour = "*/5", minute = "*", second = "*", info = "Every 5 second timer")
+    @Schedule(hour = "*/5")
     public void cleanDefeatedTokens() {
         logger.info("Cleaning due tokens");
         tokenRefreshRepository.deleteDefeatedTokens();

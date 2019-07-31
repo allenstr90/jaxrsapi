@@ -28,6 +28,8 @@ public interface UserRepository {
 
     Page<User> findPageByUserSearchForm(UserSearchForm searchForm, Pageable pageable);
 
+    Optional<User> getUser(Long id);
+
     class UserRepositoryImpl implements UserRepository {
 
         @PersistenceContext(unitName = "bookStorePU")
@@ -103,6 +105,11 @@ public interface UserRepository {
             query.setFirstResult(pageable.getSize() * pageable.getPage());
 
             return PageUtil.from(total, pageable.getPage(), pageable.getSize(), query.getResultList());
+        }
+
+        @Override
+        public Optional<User> getUser(Long id) {
+            return Optional.ofNullable(em.find(User.class, id));
         }
     }
 }

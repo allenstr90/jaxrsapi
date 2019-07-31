@@ -3,15 +3,18 @@ package aem.example.jee.jaxrsapi.core.model;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "book_store_role")
-@Data
+@Getter
+@Setter
 @NamedQuery(
         name = Role.FIND_BY_NAME,
         query = "select r from Role r where r.name= :" + Role.FIND_BY_NAME_PARAM_NAME

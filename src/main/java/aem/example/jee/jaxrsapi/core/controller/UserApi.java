@@ -34,4 +34,12 @@ public class UserApi {
         user = userService.saveUser(user);
         return Response.status(Response.Status.CREATED).entity(user).build();
     }
+
+    @GET
+    @Path("{id}")
+    public Response getUser(@PathParam("id") Long id) {
+        return userService.getUser(id)
+                .map(userDTO -> Response.ok(userDTO).build())
+                .orElse(Response.status(Response.Status.NO_CONTENT).build());
+    }
 }

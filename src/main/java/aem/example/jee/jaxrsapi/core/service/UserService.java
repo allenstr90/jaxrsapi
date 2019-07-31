@@ -24,6 +24,8 @@ public interface UserService {
 
     Page<UserDTO> findPageByUserSearchForm(UserSearchForm searchForm, Pageable pageable);
 
+    Optional<UserDTO> getUser(Long id);
+
 
     class UserServiceImpl implements UserService {
 
@@ -52,7 +54,7 @@ public interface UserService {
                             .map(roleRepository::findByName)
                             .filter(Optional::isPresent)
                             .map(Optional::get)
-                            .collect(Collectors.toList())
+                            .collect(Collectors.toSet())
             );
             return new UserDTO(userRepository.saveUser(newUser));
         }
@@ -66,6 +68,11 @@ public interface UserService {
         public Page<UserDTO> findPageByUserSearchForm(UserSearchForm searchForm, Pageable pageable) {
             Page<User> pageByUserSearchForm = userRepository.findPageByUserSearchForm(searchForm, pageable);
             return userFactory.from(pageByUserSearchForm);
+        }
+
+        @Override
+        public Optional<UserDTO> getUser(Long id) {
+            return userRepository.getUser(id).flatMap(user -> Optional.of(new UserDTO(user)));
         }
     }
 }

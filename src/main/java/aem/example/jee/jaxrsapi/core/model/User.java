@@ -1,18 +1,17 @@
 package aem.example.jee.jaxrsapi.core.model;
 
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "book_store_user")
 @Cacheable(false)
-@Data
+@Getter
+@Setter
 @NamedQuery(name = User.FIND_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username=:" + User.FIND_BY_USERNAME_PARAM_USERNAME)
 @NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u")
 @NamedNativeQuery(name = User.FIND_USER_ROLES, query = "select ROLENAME from USERS_ROLES where USERNAME =?1")
@@ -43,7 +42,7 @@ public class User implements Serializable {
                     @JoinColumn(name = "rolename", referencedColumnName = "name")
             })
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     @JsonbTransient
     public String getPassword() {
