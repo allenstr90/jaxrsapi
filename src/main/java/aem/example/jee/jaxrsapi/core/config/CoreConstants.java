@@ -10,4 +10,6 @@ public class CoreConstants {
     public static final String DB_SECURITY_VENDOR = "derby";
     public static final String DB_SECURITY_CLASSNAME = "org.apache.derby.jdbc.ClientDataSource";
     public static final String DB_SECURITY_URL = "jdbc:" + DB_SECURITY_VENDOR + "://" + DB_SECURITY_SERVER_HOST + ":" + DB_SECURITY_PORT + "/" + DB_SECURITY_NAME + ";create=true";
+
+    private CoreConstants(){}
 }

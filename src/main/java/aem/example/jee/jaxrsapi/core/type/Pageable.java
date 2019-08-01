@@ -11,6 +11,11 @@ import java.util.List;
 @Data
 @Builder
 public class Pageable<T> {
+    private final Class<T> entity;
+
+    public Pageable(Class<T> entity) {
+        this.entity = entity;
+    }
 
     @Builder.Default
     @JsonbProperty(nillable = true)
