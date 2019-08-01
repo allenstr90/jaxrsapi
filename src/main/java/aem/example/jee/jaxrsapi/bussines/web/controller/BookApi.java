@@ -1,4 +1,4 @@
-package aem.example.jee.jaxrsapi.bussines.controller;
+package aem.example.jee.jaxrsapi.bussines.web.controller;
 
 import aem.example.jee.jaxrsapi.bussines.model.Book;
 
@@ -28,6 +28,7 @@ public class BookApi {
 
     @POST
     @Transactional(Transactional.TxType.REQUIRED)
+    @RolesAllowed({"admin"})
     public Response addBook(Book book) {
         em.persist(book);
         return Response.status(Response.Status.CREATED).entity(book).build();
