@@ -8,12 +8,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.json.bind.annotation.JsonbProperty;
+import javax.json.bind.annotation.JsonbPropertyOrder;
 import javax.json.bind.annotation.JsonbTransient;
+import javax.json.bind.config.PropertyOrderStrategy;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
+@JsonbPropertyOrder(PropertyOrderStrategy.ANY)
 public class UserDTO {
 
     private Long id;

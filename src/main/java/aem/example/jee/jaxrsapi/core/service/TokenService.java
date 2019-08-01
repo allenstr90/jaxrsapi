@@ -28,8 +28,9 @@ public interface TokenService {
             TokenRefresh tokenRefresh = new TokenRefresh();
             tokenRefresh.setUsername(username);
             tokenRefresh.setRefreshToken(refreshToken);
+            tokenRefreshRepository.removeUserRefreshToken(username); // clean others refresh tokens
             tokenRefreshRepository.save(tokenRefresh);
-            return TokenDTO.builder().token(token).refeshToken(refreshToken).build();
+            return TokenDTO.builder().token(token).refreshToken(refreshToken).build();
         }
 
         @Override
@@ -38,7 +39,7 @@ public interface TokenService {
             return byUsername
                     .parallel()
                     .filter(tokenRefresh -> tokenRefresh.getRefreshToken().equals(refreshToken))
-                    .peek(tokenRefresh -> tokenRefreshRepository.delete(username))
+                    .peek(tokenRefresh -> tokenRefreshRepository.removeUserRefreshToken(username)) // clean old refresh token
                     .findAny().isPresent();
         }
     }

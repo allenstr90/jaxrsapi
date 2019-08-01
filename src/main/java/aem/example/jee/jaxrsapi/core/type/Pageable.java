@@ -3,6 +3,7 @@ package aem.example.jee.jaxrsapi.core.type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.json.bind.annotation.JsonbProperty;
 import java.util.ArrayList;
@@ -10,7 +11,9 @@ import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor
 public class Pageable<T> {
+
     private final Class<T> entity;
 
     public Pageable(Class<T> entity) {

@@ -16,7 +16,7 @@ public interface TokenRefreshRepository {
 
     Stream<TokenRefresh> findByUsername(String username);
 
-    void delete(String username);
+    void removeUserRefreshToken(String username);
 
     void deleteDefeatedTokens();
 
@@ -43,7 +43,7 @@ public interface TokenRefreshRepository {
 
         @Override
         @Transactional(Transactional.TxType.REQUIRED)
-        public void delete(String username) {
+        public void removeUserRefreshToken(String username) {
             logger.log(Level.FINE, "Cleaning tokens for user {0}", username);
             em.createNamedQuery("TokenRefresh.deleteByUsername", TokenRefresh.class)
                     .setParameter("username", username).executeUpdate();
