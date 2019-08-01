@@ -12,7 +12,7 @@ public interface RoleRepository {
 
     class RoleRepositoryImpl implements RoleRepository {
 
-        @PersistenceContext(unitName = "bookStorePU")
+        @PersistenceContext(unitName = "securityStorePU")
         private EntityManager em;
 
         @Override

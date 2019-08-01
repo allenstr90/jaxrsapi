@@ -32,7 +32,7 @@ public interface UserRepository {
 
     class UserRepositoryImpl implements UserRepository {
 
-        @PersistenceContext(unitName = "bookStorePU")
+        @PersistenceContext(unitName = "securityStorePU")
         private EntityManager em;
 
         @Override

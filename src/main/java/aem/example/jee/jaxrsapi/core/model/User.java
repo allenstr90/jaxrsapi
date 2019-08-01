@@ -8,10 +8,12 @@ import java.io.Serializable;
 import java.util.Set;
 
 @Entity
-@Table(name = "book_store_user")
+@Table(name = "APP_USER")
 @Cacheable(false)
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @NamedQuery(name = User.FIND_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username=:" + User.FIND_BY_USERNAME_PARAM_USERNAME)
 @NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u")
 @NamedNativeQuery(name = User.FIND_USER_ROLES, query = "select ROLENAME from USERS_ROLES where USERNAME =?1")
@@ -32,7 +34,7 @@ public class User implements Serializable {
     @Getter(AccessLevel.NONE)
     private String password;
 
-    @JoinTable(name = "users_roles",
+    @JoinTable(name = "APP_USERS_ROLES",
             joinColumns = {
                     @JoinColumn(name = "user_id", referencedColumnName = "id"),
                     @JoinColumn(name = "username", referencedColumnName = "username")
