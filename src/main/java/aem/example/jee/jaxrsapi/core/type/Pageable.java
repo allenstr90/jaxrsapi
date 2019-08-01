@@ -3,7 +3,6 @@ package aem.example.jee.jaxrsapi.core.type;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.json.bind.annotation.JsonbProperty;
 import java.util.ArrayList;
@@ -15,11 +14,6 @@ import java.util.List;
 public class Pageable<T> {
 
     private final Class<T> entity;
-
-    public Pageable(Class<T> entity) {
-        this.entity = entity;
-    }
-
     @Builder.Default
     @JsonbProperty(nillable = true)
     private List<Sort> sorts = new ArrayList<>();
@@ -29,6 +23,10 @@ public class Pageable<T> {
     @Builder.Default
     @JsonbProperty(nillable = true)
     private int size = 10;
+
+    public Pageable(Class<T> entity) {
+        this.entity = entity;
+    }
 
     public enum Direction {
         ASC, DESC
