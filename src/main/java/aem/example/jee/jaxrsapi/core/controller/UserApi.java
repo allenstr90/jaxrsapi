@@ -1,6 +1,7 @@
 package aem.example.jee.jaxrsapi.core.controller;
 
 import aem.example.jee.jaxrsapi.core.dto.UserDTO;
+import aem.example.jee.jaxrsapi.core.interceptor.Compress;
 import aem.example.jee.jaxrsapi.core.model.User;
 import aem.example.jee.jaxrsapi.core.service.UserService;
 import aem.example.jee.jaxrsapi.core.type.Page;
@@ -23,6 +24,7 @@ public class UserApi {
     private UserService userService;
 
     @GET
+    @Compress
     public Response getAllUsers(@QueryParam("username") String username, @QueryParam("inRole") String inRole, Pageable<User> pageable) {
         Page<UserDTO> users = userService.findPageByUserSearchForm(UserSearchForm
                 .builder().username(username).inRole(inRole).build(), pageable);

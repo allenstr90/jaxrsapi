@@ -3,6 +3,7 @@ package aem.example.jee.jaxrsapi.core.controller;
 import aem.example.jee.jaxrsapi.core.dto.LoginDTO;
 import aem.example.jee.jaxrsapi.core.dto.TokenDTO;
 import aem.example.jee.jaxrsapi.core.dto.UserDTO;
+import aem.example.jee.jaxrsapi.core.interceptor.Compress;
 import aem.example.jee.jaxrsapi.core.service.AuthService;
 
 import javax.annotation.security.PermitAll;
@@ -21,6 +22,7 @@ public class AuthApi {
 
     @POST
     @PermitAll
+    @Compress
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("token")
     public Response login(LoginDTO ldto) {
