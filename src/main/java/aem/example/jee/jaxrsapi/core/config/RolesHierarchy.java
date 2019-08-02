@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Deprecated
 public class RolesHierarchy {
 
     public static List<String> getSubRoles(Role role, List<String> roles) {
@@ -33,7 +34,7 @@ public class RolesHierarchy {
 
     @Getter
     @Setter
-    class Role {
+    private class Role {
         private String name;
         private Set<Role> children;
 
