@@ -20,6 +20,7 @@
         <jta-data-source>java:app/JaxRsApi/H2TokenStore</jta-data-source>
         <class>aem.example.jee.jaxrsapi.core.model.TokenRefresh</class>
         <class>aem.example.jee.jaxrsapi.core.converter.LocalDateToDatetimeConverter</class>
+        <class>aem.example.jee.jaxrsapi.core.model.LockUser</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create" />
