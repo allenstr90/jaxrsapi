@@ -2,6 +2,8 @@ package aem.example.jee.jaxrsapi.core.service;
 
 import aem.example.jee.jaxrsapi.core.dto.TokenDTO;
 import aem.example.jee.jaxrsapi.core.dto.UserDTO;
+import aem.example.jee.jaxrsapi.core.exception.UserLockException;
+import aem.example.jee.jaxrsapi.core.interceptor.PreventAttack;
 import aem.example.jee.jaxrsapi.core.model.User;
 import aem.example.jee.jaxrsapi.core.model.UserJWT;
 import aem.example.jee.jaxrsapi.core.repository.UserRepository;
@@ -25,6 +27,10 @@ public class AuthService {
     @Inject
     private JWTService jwtService;
 
+    @Inject
+    private LockerService lockerService;
+
+    @PreventAttack
     public Optional<UserDTO> authenticateUser(String username, String password) {
         Optional<User> optional = userRepository.findByUsername(username);
         return optional
@@ -50,5 +56,13 @@ public class AuthService {
     private Optional<UserDTO> generateUserDto(String username) {
         Optional<User> optional = userRepository.findByUsername(username);
         return optional.map(UserDTO::new);
+    }
+
+    public void traceUserToLock(String username, boolean result) throws UserLockException {
+        if (result) {
+            lockerService.unlock(username);
+        } else {
+            lockerService.markToLock(username);
+        }
     }
 }
