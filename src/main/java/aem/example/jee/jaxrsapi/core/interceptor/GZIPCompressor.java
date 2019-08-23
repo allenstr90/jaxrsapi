@@ -7,11 +7,12 @@ import javax.ws.rs.ext.WriterInterceptor;
 import javax.ws.rs.ext.WriterInterceptorContext;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.zip.GZIPOutputStream;
 
 @Provider
 @Compress
-public class GZIPCompressor implements WriterInterceptor {
+public class GZIPCompressor implements WriterInterceptor, Serializable {
     @Override
     public void aroundWriteTo(WriterInterceptorContext context) throws IOException, WebApplicationException {
         context.getHeaders().add(HttpHeaders.CONTENT_ENCODING, "gzip");
