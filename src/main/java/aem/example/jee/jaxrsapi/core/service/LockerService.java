@@ -7,11 +7,14 @@ import aem.example.jee.jaxrsapi.core.repository.LockUserRepository;
 import aem.example.jee.jaxrsapi.core.repository.TokenRefreshRepository;
 import aem.example.jee.jaxrsapi.core.repository.UserRepository;
 
+import javax.ejb.Schedule;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+@Stateless
 public class LockerService {
     @Inject
     private LockUserRepository lockUserRepository;
@@ -47,5 +50,10 @@ public class LockerService {
     public boolean userIsLocked(String username) {
         Optional<LockUser> lockUser = lockUserRepository.getLockUser(username);
         return lockUser.map(user -> (user.getTrays() + 1 > 3)).orElse(false);
+    }
+
+    @Schedule(minute = "*/10", hour = "*")
+    public void unlockUsers() {
+        lockUserRepository.unlockUsers();
     }
 }
