@@ -32,7 +32,7 @@ public class AuthService {
 
     @PreventAttack
     public Optional<UserDTO> authenticateUser(String username, String password) {
-        Optional<User> optional = userRepository.findByUsername(username);
+        Optional<User> optional = userRepository.findByUsernameAndActive(username);
         return optional
                 .filter(user -> PasswordEncoder.encodeSha256(password != null ? password : "").equals(user.getPassword()))
                 .map(UserDTO::new);
