@@ -1,6 +1,7 @@
 package aem.example.jee.jaxrsapi.core.mapper;
 
 import aem.example.jee.jaxrsapi.core.exception.UserLockException;
+import io.sentry.Sentry;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.HttpHeaders;
@@ -17,6 +18,7 @@ public class BookAppExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Override
     public Response toResponse(Throwable exception) {
+        Sentry.capture(exception);
         if (exception instanceof NotFoundException)
             return from(Response.Status.NOT_FOUND, exception.getMessage());
         if (exception instanceof UserLockException)
