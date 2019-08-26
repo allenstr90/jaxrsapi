@@ -15,11 +15,13 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @NamedQuery(name = User.FIND_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username=:" + User.FIND_BY_USERNAME_PARAM_USERNAME)
+@NamedQuery(name = User.FIND_BY_USERNAME_ACTIVE, query = "SELECT u FROM User u WHERE u.active = true AND u.username=:" + User.FIND_BY_USERNAME_PARAM_USERNAME)
 @NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u")
 @NamedNativeQuery(name = User.FIND_USER_ROLES, query = "select ROLENAME from APP_USERS_ROLES where USERNAME =?1")
 public class User implements Serializable {
 
     public static final String FIND_BY_USERNAME = "User.findByUsername";
+    public static final String FIND_BY_USERNAME_ACTIVE = "User.findByUsernameAndActive";
     public static final String FIND_BY_USERNAME_PARAM_USERNAME = "username";
     public static final String FIND_ALL = "User.findAll";
     public static final String FIND_USER_ROLES = "User.findUserRoles";
@@ -33,6 +35,8 @@ public class User implements Serializable {
 
     @Getter(AccessLevel.NONE)
     private String password;
+
+    private boolean active = true;
 
     @JoinTable(name = "APP_USERS_ROLES",
             joinColumns = {
