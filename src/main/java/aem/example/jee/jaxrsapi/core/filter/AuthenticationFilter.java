@@ -1,6 +1,7 @@
 package aem.example.jee.jaxrsapi.core.filter;
 
 import aem.example.jee.jaxrsapi.core.model.UserJWT;
+import aem.example.jee.jaxrsapi.core.service.LockerService;
 import aem.example.jee.jaxrsapi.core.util.JWTService;
 
 import javax.annotation.Priority;
@@ -23,12 +24,13 @@ import java.util.logging.Logger;
 @Priority(Priorities.AUTHENTICATION)
 public class AuthenticationFilter implements ContainerRequestFilter {
 
-    @Inject
-    private JWTService jwtService;
-
     private static final Logger LOGGER = Logger.getLogger(AuthenticationFilter.class.getName());
     private static final List<String> WHITE_LIST = Arrays.asList("auth/token", "auth/refresh");
     private static final String BEARER = "Bearer";
+    @Inject
+    private JWTService jwtService;
+    @Inject
+    private LockerService lockerService;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
@@ -48,6 +50,11 @@ public class AuthenticationFilter implements ContainerRequestFilter {
             } else {
                 final SecurityContext currentSecurityContext = requestContext.getSecurityContext();
                 UserJWT userJWT = jwtService.getUserJwt(token);
+                if (lockerService.userIsLocked(userJWT.getUsername()))
+                    refuseWithUnauthorized(requestContext,
+                            String.format("Your username [%s] is under attack and was temporally locked",
+                                    userJWT.getUsername()));
+
                 requestContext.setSecurityContext(new SecurityContext() {
                     @Override
                     public Principal getUserPrincipal() {
