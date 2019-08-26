@@ -5,6 +5,7 @@ import aem.example.jee.jaxrsapi.core.model.LockUser;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public interface LockUserRepository {
@@ -13,6 +14,8 @@ public interface LockUserRepository {
     void unlock(String username);
 
     LockUser update(LockUser lockUser);
+
+    Optional<LockUser> getLockUser(String username);
 
     class LockUserRepositoryImpl implements LockUserRepository {
 
@@ -56,6 +59,11 @@ public interface LockUserRepository {
         @Transactional(Transactional.TxType.REQUIRED)
         public LockUser update(LockUser lockUser) {
             return em.merge(lockUser);
+        }
+
+        @Override
+        public Optional<LockUser> getLockUser(String username) {
+            return Optional.ofNullable(em.find(LockUser.class, username));
         }
     }
 }
