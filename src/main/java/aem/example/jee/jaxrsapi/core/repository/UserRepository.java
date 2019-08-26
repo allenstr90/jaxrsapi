@@ -22,7 +22,11 @@ public interface UserRepository {
 
     Optional<User> findByUsername(String username);
 
+    Optional<User> findByUsernameAndActive(String username);
+
     User saveUser(User user);
+
+    User updateUser(User user);
 
     List<String> getUserRoles(String username);
 
@@ -42,12 +46,25 @@ public interface UserRepository {
                     .setParameter(User.FIND_BY_USERNAME_PARAM_USERNAME, username)
                     .getResultList().stream().findFirst();
         }
+        @Override
+        public Optional<User> findByUsernameAndActive(String username) {
+            return em
+                    .createNamedQuery(User.FIND_BY_USERNAME_ACTIVE, User.class)
+                    .setParameter(User.FIND_BY_USERNAME_PARAM_USERNAME, username)
+                    .getResultList().stream().findFirst();
+        }
 
         @Override
         @Transactional(Transactional.TxType.REQUIRED)
         public User saveUser(User user) {
             em.persist(user);
             return user;
+        }
+
+        @Override
+        @Transactional(Transactional.TxType.REQUIRED)
+        public User updateUser(User user) {
+            return em.merge(user);
         }
 
         @Override
