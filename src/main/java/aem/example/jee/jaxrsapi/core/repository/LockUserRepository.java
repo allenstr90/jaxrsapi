@@ -55,7 +55,7 @@ public interface LockUserRepository {
                 em.merge(lockUser);
                 em.flush();
             }
-            logger.info("Username login ok and unlocked " + username);
+            logger.info(() -> "Username login ok and unlocked " + username);
         }
 
         @Override

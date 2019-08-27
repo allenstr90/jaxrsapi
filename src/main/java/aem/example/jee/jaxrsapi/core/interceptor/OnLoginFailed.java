@@ -25,17 +25,18 @@ public class OnLoginFailed implements Serializable {
     private LockerService lockerService;
 
     @AroundInvoke
+    @SuppressWarnings({"unchecked"})
     public Object checkUserLoginRetries(InvocationContext context) throws Exception {
         Object[] parameters = context.getParameters();
         String username = (parameters != null && parameters[0] != null) ? (String) parameters[0] : "";
-        if (lockerService.userIsLocked(username))
+        if (lockerService.userIsLocked(username)) {
+            log.warning(() -> String.format("Username [%s] try login and is locked", username));
             throw new UserLockException(username);
+        }
         Object proceed = context.proceed();
-        if (proceed != null) {
-            if (proceed instanceof Optional) {
-                Optional<UserDTO> result = (Optional<UserDTO>) proceed;
-                authService.traceUserToLock(username, result.isPresent());
-            }
+        if (proceed != null && proceed instanceof Optional) {
+            Optional<UserDTO> result = (Optional<UserDTO>) proceed;
+            authService.traceUserToLock(username, result.isPresent());
         }
         return proceed;
     }

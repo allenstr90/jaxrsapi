@@ -52,7 +52,7 @@ public class LockerService {
         return lockUser.map(user -> (user.getTrays() + 1 > 3)).orElse(false);
     }
 
-    @Schedule(minute = "*/10", hour = "*")
+    @Schedule(minute = "*/1", hour = "*")
     public void unlockUsers() {
         lockUserRepository.unlockUsers();
     }
