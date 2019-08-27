@@ -34,11 +34,11 @@ public class OnLoginFailed implements Serializable {
             throw new UserLockException(username);
         }
         Object proceed = context.proceed();
-        if (proceed != null)
-            if (proceed instanceof Optional) {
-                Optional<UserDTO> result = (Optional<UserDTO>) proceed;
-                authService.traceUserToLock(username, result.isPresent());
-            }
+        if (proceed instanceof Optional) {
+            Optional<UserDTO> result = (Optional<UserDTO>) proceed;
+            authService.traceUserToLock(username, result.isPresent());
+        }
+
         return proceed;
     }
 }
